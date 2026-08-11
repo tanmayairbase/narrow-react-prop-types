@@ -1,6 +1,6 @@
 # Narrow React Prop Types
 
-A GitHub Copilot skill for making React component prop types match the states reached by production code.
+An AI Agent skill for making React component prop types match the states reached by production code.
 
 It uses live, non-test and non-Storybook call sites as the source of truth. Stories, tests, mocks, and demos must adapt to the stricter production contract instead of widening it.
 
@@ -29,3 +29,7 @@ Invoke it with:
 ```
 
 See [`SKILL.md`](SKILL.md) for the complete workflow. The `references/` directory includes an example GitHub Actions workflow, agent memory file, and CI response template.
+
+### References
+
+Skill copied from `humanlayer/skills` and modified / iterated to better suite Airbase frontend code.
