@@ -46,6 +46,8 @@ Classify call sites by whether they are live code paths or support code:
 
 Only live code paths should determine what the component API supports.
 
+Inspect the full prop list at every live JSX call site. A search for `propName=` proves that some caller supplies the prop; it does not prove that every caller does.
+
 ### 3. Derive the real types from the live code paths
 
 Read the live call sites and classify each prop:
@@ -63,6 +65,14 @@ Update exported prop types to match only the states observed in live code paths.
 The looser and more optional a type is, the more possible states the component has to reason about. Every optional prop creates another branch the component must handle, test, and keep correct. Prefer strict types that prevent impossible states instead of broad types that require defensive render logic.
 
 If the component always renders an interactive affordance, require the handler that makes it work. Do not allow inert states like a visible menu item that calls `onRename?.(...)`.
+
+When a display flag and a handler are linked, model their valid combinations as a union. Preserve dynamic production booleans while requiring the handler whenever the caller controls the flag:
+
+```ts
+type TToggleProps =
+  | { showToggle: boolean; onToggle: () => void }
+  | { showToggle?: false; onToggle?: never }
+```
 
 ### 5. Derive and extract types where possible
 
@@ -145,6 +155,8 @@ Use repository-specific validation commands when available. In airbase-frontend 
 - `pnpm test:once -- <test-file-path>` — prefer targeted test runs for the files you changed
 - `pnpm typecheck` — always run after code/test changes
 - `pnpm lint <changed-file-paths>` — run on touched files; use `--fix` when issues are auto-fixable
+
+Run typecheck after each narrowing attempt. A missing-prop error from a live caller is evidence of a supported runtime state, so revise the contract instead of weakening or forcing that caller.
 
 ### 11. Format the response
 
