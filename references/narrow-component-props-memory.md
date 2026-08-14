@@ -10,3 +10,4 @@ Standing feedback for future `Agent: Narrow React Component Props` runs.
 - Treat a missing-prop typecheck error from a live caller as evidence of a supported runtime state. Revise the contract to model that state.
 - Keep adjacent helpers at their established contracts unless live callers require a change; a generic type that defaults to `any` is not evidence for widening.
 - When narrowing a component into discriminated modes, verify whether mode-specific flags affect rendered classes or markup. Update support snapshots only when that rendered change is intentional; do not preserve a loose prop solely to avoid snapshot changes.
+- If live code has only one variant, remove the variant prop and the unreachable branch together. Verify every non-test caller first, then keep the surviving branch's markup and positioning logic unchanged.
