@@ -11,3 +11,10 @@ Standing feedback for future `Agent: Narrow React Component Props` runs.
 - Keep adjacent helpers at their established contracts unless live callers require a change; a generic type that defaults to `any` is not evidence for widening.
 - When narrowing a component into discriminated modes, verify whether mode-specific flags affect rendered classes or markup. Update support snapshots only when that rendered change is intentional; do not preserve a loose prop solely to avoid snapshot changes.
 - If live code has only one variant, remove the variant prop and the unreachable branch together. Verify every non-test and non-storybook caller first, then keep the surviving branch's markup and positioning logic unchanged.
+
+## Forwarding boundaries
+
+- Trace wrapper, HOC, render-prop, and list-rendering paths before requiring a prop or removing its fallback. A direct caller can configure a wrapper to pass a value today without the wrapper type guaranteeing that it will reach the child.
+- Treat conditional forwarding flags such as `shouldPassData` as runtime evidence, not a type contract, when the wrapper accepts `ListRow` as `ComponentType<any>` or types the forwarded prop as optional.
+- Do not narrow a child component across an untyped or loosely typed boundary based only on the current configuration. Either strengthen the boundary so the forwarding guarantee is encoded, or keep the child contract compatible with the boundary's supported states.
+- Requiring a prop and deleting its defensive fallback is not a meaningful narrowing when the adapter can still omit the prop at runtime. If the forwarding guarantee cannot be established, revert that part of the narrowing and preserve the honest runtime contract.
